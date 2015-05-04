@@ -2,7 +2,7 @@
  * Created by bensmith on 5/4/15.
  */
 
-var You = {
+var warrior = {
     hearts: 3,
     attack: 1,
     xPos: 0,
@@ -61,22 +61,22 @@ addEventListener("keyup", function(e){
 }, false);
 
 var newGame = function(){
-    You.xPos = canvas.width / 2;
-    You.yPos = canvas.height / 2;
+    warrior.xPos = canvas.width / 2;
+    warrior.yPos = canvas.height / 2;
 };
 
 var update = function(modifier){
-    if(38 in keysdown){  //up
-        You.yPos -= You.speed * modifier;
+    if(38 in keysdown && warrior.yPos > 0){  //up
+        warrior.yPos -= warrior.speed * modifier;
     }
-    if(40 in keysdown){  //down
-        You.yPos += You.speed * modifier;
+    if(40 in keysdown && warrior.yPos < canvas.height - 64){  //down
+        warrior.yPos += warrior.speed * modifier;
     }
-    if(37 in keysdown){  //left
-        You.xPos -= You.speed * modifier;
+    if(37 in keysdown && warrior.xPos > 0){  //left
+        warrior.xPos -= warrior.speed * modifier;
     }
-    if(39 in keysdown){  //right
-        You.xPos += You.speed * modifier;
+    if(39 in keysdown && warrior.xPos < canvas.width - 64){  //right
+        warrior.xPos += warrior.speed * modifier;
     }
 };
 
@@ -89,11 +89,11 @@ var render = function(){
     var d = new Date();
     if(d.getSeconds() % 2 == 0){
         if(warrReady){
-            ctx.drawImage(warriorImg, You.xPos, You.yPos);
+            ctx.drawImage(warriorImg, warrior.xPos, warrior.yPos);
         }
     } else {
         if(warr2Ready){
-            ctx.drawImage(warrior2Img, You.xPos, You.yPos);
+            ctx.drawImage(warrior2Img, warrior.xPos, warrior.yPos);
         }
     }
 

@@ -30,12 +30,11 @@ function Baddie(hits, damage) {
 }
 
 var bad1 = new Baddie(1,1);
-
 var baddies = [bad1];
-
-function addBaddie(){
+setInterval(function(){ //Add new baddie every 5 seconds
     baddies[baddies.length] = new Baddie(1, 1);
-}
+}, 5000);
+
 
 //Image Initializing ---------------------------------------------------------------------------------------------------
 var bgReady = false,
@@ -107,7 +106,7 @@ var update = function(modifier){
     //baddies
     var s = new Date().getSeconds();
 
-    if(s % 5 == 0) addBaddie();
+    //if(s % 5 == 0) addBaddie();
 
     if(baddies.length > 0){
         for(var i = 0; i < baddies.length; i++){
@@ -169,8 +168,6 @@ var main = function(){
 
     update(delta / 1000);
     render();
-
-    //if(now.getSeconds() % 5 == 0) addBaddie();
 
     then = now;
 

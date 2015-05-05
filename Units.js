@@ -47,8 +47,12 @@ var bgReady = false,
     wWalk2Ready = false,
     wWalk3Ready = false,
     wWalk4Ready = false,
-    attackReady = false;
-var monsterReady = false;
+    attackReady = false,
+    monsterReady = false,
+    health1Ready = false,
+    health2Ready = false,
+    health3Ready = false,
+    health4Ready = false;
 
 var bgImg = new Image(),
     warriorImg = new Image(),
@@ -57,8 +61,12 @@ var bgImg = new Image(),
     wWalk2Img = new Image(),
     wWalk3Img = new Image(),
     wWalk4Img = new Image(),
-    attackImg = new Image();
-var monsterImg = new Image();
+    attackImg = new Image(),
+    monsterImg = new Image(),
+    health1Img = new Image(),
+    health2Img = new Image(),
+    health3Img = new Image(),
+    health4Img = new Image();
 
 bgImg.onload = function(){ bgReady = true };
 warriorImg.onload = function(){ warrReady = true };
@@ -69,6 +77,10 @@ wWalk3Img.onload = function(){ wWalk3Ready = true };
 wWalk4Img.onload = function(){ wWalk4Ready = true };
 attackImg.onload = function(){ attackReady = true };
 monsterImg.onload = function(){ monsterReady = true };
+health1Img.onload = function(){ health1Ready = true };
+health2Img.onload = function(){ health2Ready = true };
+health3Img.onload = function(){ health3Ready = true };
+health4Img.onload = function(){ health4Ready = true };
 
 bgImg.src = "Imgs/BACKGRND.bmp";
 warriorImg.src = "Imgs/sprite_1.png";
@@ -79,6 +91,10 @@ wWalk3Img.src = "Imgs/warriorWalk_3.png";
 wWalk4Img.src = "Imgs/warriorWalk_4.png";
 attackImg.src = "Imgs/warriorAttack.png";
 monsterImg.src = "Imgs/goatMan.png";
+health1Img.src = "Imgs/health.png";
+health2Img.src = "Imgs/health2.png";
+health3Img.src = "Imgs/health3.png";
+health4Img.src = "Imgs/health4.png";
 
 //Keyboard input -------------------------------------------------------------------------------------------------------
 var keysdown = {};
@@ -122,14 +138,15 @@ var update = function(modifier){
 function collisions(){
     for(var i = 0; i < baddies.length; i++){
         //Hero Collision
-        if(baddies[i].xPos >= Hero.xPos && baddies[i].xPos <= Hero.xPos + 64 //Check top left edge
+        if((baddies[i].xPos >= Hero.xPos && baddies[i].xPos <= Hero.xPos + 64 //Check top left edge
             && baddies[i].yPos >= Hero.yPos && baddies[i].yPos <= Hero.yPos + 64
             || baddies[i].xPos + 64 >= Hero.xPos && baddies[i].xPos + 64 <= Hero.xPos + 64 //Check top right edge
             && baddies[i].yPos >= Hero.yPos && baddies[i].yPos <= Hero.yPos + 64
             || baddies[i].xPos >= Hero.xPos && baddies[i].xPos <= Hero.xPos + 64 //Check bottom Left edge
             && baddies[i].yPos + 64 >= Hero.yPos && baddies[i].yPos + 64 <= Hero.yPos + 64
             || baddies[i].xPos + 64 >= Hero.xPos && baddies[i].xPos + 64 <= Hero.xPos + 64 //Check bottom Right edge
-            && baddies[i].yPos + 64 >= Hero.yPos && baddies[i].yPos + 64 <= Hero.yPos + 64 ){
+            && baddies[i].yPos + 64 >= Hero.yPos && baddies[i].yPos + 64 <= Hero.yPos + 64)
+            && baddies[i].visible == true){
             baddies[i].visible = false;
             if(32 in keysdown && !(37 in keysdown) && !(38 in keysdown) && !(39 in keysdown) && !(40 in keysdown)){
                 //If stabbing
@@ -149,6 +166,12 @@ var render = function(){
     if(bgReady){ ctx.drawImage(bgImg,0,0); }  //Draws Background
 
     var d = new Date();
+
+    //hearts
+    if(Hero.hearts >= 4 && health4Ready) ctx.drawImage(health4Img, 20, 20);
+    else if(Hero.hearts == 3 && health3Ready) ctx.drawImage(health3Img, 20, 20);
+    else if(Hero.hearts == 2 && health2Ready) ctx.drawImage(health2Img, 20, 20);
+    else if(Hero.hearts == 1 && health1Ready) ctx.drawImage(health1Img, 20, 20);
 
     //Hero movement
     if(38 in keysdown || 40 in keysdown || 37 in keysdown || 39 in keysdown){ //Walk Graphic
@@ -203,7 +226,7 @@ var main = function(){
 };
 
 var newGame = function(){
-    Hero.xPos = canvas.width / 2;
+    Hero.xPos = 100;
     Hero.yPos = canvas.height / 2;
 };
 

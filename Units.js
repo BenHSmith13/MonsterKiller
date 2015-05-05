@@ -17,7 +17,7 @@ function baddie(hits, damage) {
     this.yPos = 0;
 }
 
-//canvas variables
+//canvas variables -----------------------------------------------------------------------------------------------------
 var canvas = document.createElement("canvas");
 var ctx = canvas.getContext("2d");
 canvas.width = 600;
@@ -26,30 +26,42 @@ canvas.height = 500;
 document.body.appendChild(canvas);
 
 
-//Image Initializers
-var bgReady = false;
-var bgImg = new Image();
-bgImg.onload = function(){
-    bgReady = true
-};
+//Image Initializing ---------------------------------------------------------------------------------------------------
+var bgReady = false,
+    warrReady = false,
+    warr2Ready = false,
+    wWalk1Ready = false,
+    wWalk2Ready = false,
+    wWalk3Ready = false,
+    wWalk4Ready = false,
+    wWalkReady = false;
+var bgImg = new Image(),
+    warriorImg = new Image(),
+    warrior2Img = new Image(),
+    wWalk1Img = new Image(),
+    wWalk2Img = new Image(),
+    wWalk3Img = new Image(),
+    wWalk4Img = new Image(),
+    wWalkGif = new Image();
+bgImg.onload = function(){ bgReady = true };
+warriorImg.onload = function(){ warrReady = true };
+warrior2Img.onload = function(){ warr2Ready = true };
+wWalk1Img.onload = function(){ wWalk1Ready = true };
+wWalk2Img.onload = function(){ wWalk2Ready = true };
+wWalk3Img.onload = function(){ wWalk3Ready = true };
+wWalk4Img.onload = function(){ wWalk4Ready = true };
+wWalkGif.onload = function(){ wWalkGif = true };
+
 bgImg.src = "BACKGRND.bmp";
+warriorImg.src = "Imgs/sprite_1.png";
+warrior2Img.src = "Imgs/sprite_2.png";
+wWalk1Img.src = "Imgs/warriorWalk_1.png";
+wWalk2Img.src = "Imgs/warriorWalk_2.png";
+wWalk3Img.src = "Imgs/warriorWalk_3.png";
+wWalk4Img.src = "Imgs/warriorWalk_4.png";
+wWalkGif.src = "Imgs/warriorWalking.gif";
 
-var warrReady = false;
-var warriorImg = new Image();
-warriorImg.onload = function(){
-    warrReady = true
-};
-warriorImg.src = "sprite_1.png";
-
-var warr2Ready = false;
-var warrior2Img = new Image();
-warrior2Img.onload = function(){
-    warr2Ready = true
-};
-warrior2Img.src = "sprite_2.png";
-
-
-//Keyboard input
+//Keyboard input -------------------------------------------------------------------------------------------------------
 var keysdown = {};
 
 addEventListener("keydown", function(e){
@@ -80,26 +92,32 @@ var update = function(modifier){
     }
 };
 
-//draw crap
-
+//draw crap ------------------------------------------------------------------------------------------------------------
 var render = function(){
-    if(bgReady){
-        ctx.drawImage(bgImg,0,0);
-    }
+    if(bgReady){ ctx.drawImage(bgImg,0,0); }  //Draws Background
+
     var d = new Date();
-    if(d.getSeconds() % 2 == 0){
-        if(warrReady){
-            ctx.drawImage(warriorImg, warrior.xPos, warrior.yPos);
+
+    if(38 in keysdown || 40 in keysdown || 37 in keysdown || 39 in keysdown){ //Walk Graphic
+        if(d.getMilliseconds() < 250) {
+            if(wWalk1Ready){ ctx.drawImage(wWalk1Img, warrior.xPos, warrior.yPos); }
+        } else if(d.getMilliseconds() < 500){
+            if(wWalk2Ready){ ctx.drawImage(wWalk2Img, warrior.xPos, warrior.yPos);}
+        } else if(d.getMilliseconds() < 750){
+            if(wWalk3Ready){ctx.drawImage(wWalk3Img, warrior.xPos, warrior.yPos);}
+        } else {
+            if(wWalk4Ready){ ctx.drawImage(wWalk4Img, warrior.xPos, warrior.yPos);}
         }
+    }
+    else if(d.getSeconds() % 2 == 0){ //Warrior Shifts in Place
+        if(warrReady){ ctx.drawImage(warriorImg, warrior.xPos, warrior.yPos); }
     } else {
-        if(warr2Ready){
-            ctx.drawImage(warrior2Img, warrior.xPos, warrior.yPos);
-        }
+        if(warr2Ready){ ctx.drawImage(warrior2Img, warrior.xPos, warrior.yPos); }
     }
 
 };
 
-//Main Game Loop
+//Main Game Loop -------------------------------------------------------------------------------------------------------
 var main = function(){
     var now = Date.now();
     var delta = now - then;

@@ -34,7 +34,7 @@ var bgReady = false,
     wWalk2Ready = false,
     wWalk3Ready = false,
     wWalk4Ready = false,
-    wWalkReady = false;
+    attackReady = false;
 var bgImg = new Image(),
     warriorImg = new Image(),
     warrior2Img = new Image(),
@@ -42,7 +42,7 @@ var bgImg = new Image(),
     wWalk2Img = new Image(),
     wWalk3Img = new Image(),
     wWalk4Img = new Image(),
-    wWalkGif = new Image();
+    attackImg = new Image();
 bgImg.onload = function(){ bgReady = true };
 warriorImg.onload = function(){ warrReady = true };
 warrior2Img.onload = function(){ warr2Ready = true };
@@ -50,7 +50,7 @@ wWalk1Img.onload = function(){ wWalk1Ready = true };
 wWalk2Img.onload = function(){ wWalk2Ready = true };
 wWalk3Img.onload = function(){ wWalk3Ready = true };
 wWalk4Img.onload = function(){ wWalk4Ready = true };
-wWalkGif.onload = function(){ wWalkGif = true };
+attackImg.onload = function(){ attackReady = true };
 
 bgImg.src = "BACKGRND.bmp";
 warriorImg.src = "Imgs/sprite_1.png";
@@ -59,7 +59,7 @@ wWalk1Img.src = "Imgs/warriorWalk_1.png";
 wWalk2Img.src = "Imgs/warriorWalk_2.png";
 wWalk3Img.src = "Imgs/warriorWalk_3.png";
 wWalk4Img.src = "Imgs/warriorWalk_4.png";
-wWalkGif.src = "Imgs/warriorWalking.gif";
+attackImg.src = "Imgs/warriorAttack.png";
 
 //Keyboard input -------------------------------------------------------------------------------------------------------
 var keysdown = {};
@@ -99,15 +99,18 @@ var render = function(){
     var d = new Date();
 
     if(38 in keysdown || 40 in keysdown || 37 in keysdown || 39 in keysdown){ //Walk Graphic
-        if(d.getMilliseconds() < 250) {
+        if(d.getMilliseconds() < 125 || d.getMilliseconds() >= 500 && d.getMilliseconds() < 625) {
             if(wWalk1Ready){ ctx.drawImage(wWalk1Img, warrior.xPos, warrior.yPos); }
-        } else if(d.getMilliseconds() < 500){
+        } else if(d.getMilliseconds() < 250 || d.getMilliseconds() >= 625 && d.getMilliseconds() < 750){
             if(wWalk2Ready){ ctx.drawImage(wWalk2Img, warrior.xPos, warrior.yPos);}
-        } else if(d.getMilliseconds() < 750){
+        } else if(d.getMilliseconds() < 375 || d.getMilliseconds() >= 750 && d.getMilliseconds() < 875){
             if(wWalk3Ready){ctx.drawImage(wWalk3Img, warrior.xPos, warrior.yPos);}
         } else {
             if(wWalk4Ready){ ctx.drawImage(wWalk4Img, warrior.xPos, warrior.yPos);}
         }
+    }
+    else if(32 in keysdown){  //Spacebar attack
+        if(attackReady){ ctx.drawImage(attackImg, warrior.xPos, warrior.yPos);}
     }
     else if(d.getSeconds() % 2 == 0){ //Warrior Shifts in Place
         if(warrReady){ ctx.drawImage(warriorImg, warrior.xPos, warrior.yPos); }

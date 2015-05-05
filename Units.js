@@ -1,7 +1,6 @@
 /**
  * Created by bensmith on 5/4/15.
  */
-
 //canvas variables -----------------------------------------------------------------------------------------------------
 var canvas = document.createElement("canvas");
 var ctx = canvas.getContext("2d");
@@ -12,12 +11,15 @@ document.body.appendChild(canvas);
 
 
 //Unit Objects ---------------------------------------------------------------------------------------------------------
-var warrior = {
+var score = 0;
+
+var Hero = {
     hearts: 3,
     attack: 1,
     xPos: 0,
     yPos:0,
-    speed: 128 //Movement in pixels per second
+    speed: 128, //Movement in pixels per second
+    canHit: true
 };
 
 function Baddie(hits, damage) {
@@ -25,8 +27,9 @@ function Baddie(hits, damage) {
     this.damage = damage;
     this.xPos = canvas.width - 64;
     this.yPos = Math.random() * canvas.height;
-    this.yDest = Math.random() * canvas.height;
+    this.yDest = Math.random() * canvas.height - 64;
     this.speed = 100;
+    this.visible = true;
 }
 
 var bad1 = new Baddie(1,1);
@@ -89,25 +92,21 @@ addEventListener("keyup", function(e){
 }, false);
 
 var update = function(modifier){
-    //warrior
-    if(38 in keysdown && warrior.yPos > 0){  //up
-        warrior.yPos -= warrior.speed * modifier;
+    //Hero
+    if(38 in keysdown && Hero.yPos > 0){  //up
+        Hero.yPos -= Hero.speed * modifier;
     }
-    if(40 in keysdown && warrior.yPos < canvas.height - 64){  //down
-        warrior.yPos += warrior.speed * modifier;
+    if(40 in keysdown && Hero.yPos < canvas.height - 64){  //down
+        Hero.yPos += Hero.speed * modifier;
     }
-    if(37 in keysdown && warrior.xPos > 0){  //left
-        warrior.xPos -= warrior.speed * modifier;
+    if(37 in keysdown && Hero.xPos > 0){  //left
+        Hero.xPos -= Hero.speed * modifier;
     }
-    if(39 in keysdown && warrior.xPos < canvas.width - 64){  //right
-        warrior.xPos += warrior.speed * modifier;
+    if(39 in keysdown && Hero.xPos < canvas.width - 64){  //right
+        Hero.xPos += Hero.speed * modifier;
     }
 
     //baddies
-    var s = new Date().getSeconds();
-
-    //if(s % 5 == 0) addBaddie();
-
     if(baddies.length > 0){
         for(var i = 0; i < baddies.length; i++){
             baddies[i].xPos -= baddies[i].speed * modifier;
@@ -116,7 +115,34 @@ var update = function(modifier){
         }
     }
 
+    collisions();
 };
+
+//Collision Handler ----------------------------------------------------------------------------------------------------
+function collisions(){
+    for(var i = 0; i < baddies.length; i++){
+        //Hero Collision
+        if(baddies[i].xPos >= Hero.xPos && baddies[i].xPos <= Hero.xPos + 64 //Check top left edge
+            && baddies[i].yPos >= Hero.yPos && Hero.yPos <= Hero.yPos + 64
+            || baddies[i].xPos + 64 >= Hero.xPos && baddies[i].xPos + 64 <= Hero.xPos + 64 //Check top right edge
+            && baddies[i].yPos >= Hero.yPos && Hero.yPos <= Hero.yPos + 64
+            || baddies[i].xPos >= Hero.xPos && baddies[i].xPos <= Hero.xPos + 64 //Check bottom Left edge
+            && baddies[i].yPos + 64 >= Hero.yPos && Hero.yPos + 64 <= Hero.yPos + 64
+            || baddies[i].xPos + 64 >= Hero.xPos && baddies[i].xPos + 64 <= Hero.xPos + 64 //Check bottom Right edge
+            && baddies[i].yPos + 64 >= Hero.yPos && Hero.yPos + 64 <= Hero.yPos + 64 ){
+            baddies[i].visible = false;
+            if(32 in keysdown && !(37 in keysdown) && !(38 in keysdown) && !(39 in keysdown) && !(40 in keysdown)){
+                //If stabbing
+                score += 10;
+            } else {
+                //Need to set temp invincibility
+                Hero.hearts -= 1;
+            }
+        }
+
+    }
+}
+
 
 //draw crap ------------------------------------------------------------------------------------------------------------
 var render = function(){
@@ -124,30 +150,30 @@ var render = function(){
 
     var d = new Date();
 
-    //warrior movement
+    //Hero movement
     if(38 in keysdown || 40 in keysdown || 37 in keysdown || 39 in keysdown){ //Walk Graphic
         if(d.getMilliseconds() < 125 || d.getMilliseconds() >= 500 && d.getMilliseconds() < 625) {
-            if(wWalk1Ready){ ctx.drawImage(wWalk1Img, warrior.xPos, warrior.yPos); }
+            if(wWalk1Ready){ ctx.drawImage(wWalk1Img, Hero.xPos, Hero.yPos); }
         } else if(d.getMilliseconds() < 250 || d.getMilliseconds() >= 625 && d.getMilliseconds() < 750){
-            if(wWalk2Ready){ ctx.drawImage(wWalk2Img, warrior.xPos, warrior.yPos);}
+            if(wWalk2Ready){ ctx.drawImage(wWalk2Img, Hero.xPos, Hero.yPos);}
         } else if(d.getMilliseconds() < 375 || d.getMilliseconds() >= 750 && d.getMilliseconds() < 875){
-            if(wWalk3Ready){ctx.drawImage(wWalk3Img, warrior.xPos, warrior.yPos);}
+            if(wWalk3Ready){ctx.drawImage(wWalk3Img, Hero.xPos, Hero.yPos);}
         } else {
-            if(wWalk4Ready){ ctx.drawImage(wWalk4Img, warrior.xPos, warrior.yPos);}
+            if(wWalk4Ready){ ctx.drawImage(wWalk4Img, Hero.xPos, Hero.yPos);}
         }
     }
     else if(32 in keysdown){  //Spacebar attack
-        if(attackReady){ ctx.drawImage(attackImg, warrior.xPos, warrior.yPos);}
+        if(attackReady){ ctx.drawImage(attackImg, Hero.xPos, Hero.yPos);}
     }
     else { //Warrior Shifts in Place
         if (d.getSeconds() % 2 == 0) {
             if (warrReady) {
-                ctx.drawImage(warriorImg, warrior.xPos, warrior.yPos);
+                ctx.drawImage(warriorImg, Hero.xPos, Hero.yPos);
             }
         }
         else {
             if (warr2Ready) {
-                ctx.drawImage(warrior2Img, warrior.xPos, warrior.yPos);
+                ctx.drawImage(warrior2Img, Hero.xPos, Hero.yPos);
             }
         }
     }
@@ -155,7 +181,9 @@ var render = function(){
     //Baddie Movement
     if(baddies.length > 0 && monsterReady){
         for(var i = 0; i < baddies.length; i++){
-            ctx.drawImage(monsterImg, baddies[i].xPos, baddies[i].yPos);
+            if(baddies[i].visible){
+                ctx.drawImage(monsterImg, baddies[i].xPos, baddies[i].yPos);
+            }
         }
     }
 
@@ -175,8 +203,8 @@ var main = function(){
 };
 
 var newGame = function(){
-    warrior.xPos = canvas.width / 2;
-    warrior.yPos = canvas.height / 2;
+    Hero.xPos = canvas.width / 2;
+    Hero.yPos = canvas.height / 2;
 };
 
 var then = Date.now();

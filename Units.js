@@ -78,7 +78,7 @@ wWalk2Img.src = "Imgs/warriorWalk_2.png";
 wWalk3Img.src = "Imgs/warriorWalk_3.png";
 wWalk4Img.src = "Imgs/warriorWalk_4.png";
 attackImg.src = "Imgs/warriorAttack.png";
-monsterImg.src = "Imgs/Office.png";
+monsterImg.src = "Imgs/goatMan.png";
 
 //Keyboard input -------------------------------------------------------------------------------------------------------
 var keysdown = {};
@@ -123,13 +123,13 @@ function collisions(){
     for(var i = 0; i < baddies.length; i++){
         //Hero Collision
         if(baddies[i].xPos >= Hero.xPos && baddies[i].xPos <= Hero.xPos + 64 //Check top left edge
-            && baddies[i].yPos >= Hero.yPos && Hero.yPos <= Hero.yPos + 64
+            && baddies[i].yPos >= Hero.yPos && baddies[i].yPos <= Hero.yPos + 64
             || baddies[i].xPos + 64 >= Hero.xPos && baddies[i].xPos + 64 <= Hero.xPos + 64 //Check top right edge
-            && baddies[i].yPos >= Hero.yPos && Hero.yPos <= Hero.yPos + 64
+            && baddies[i].yPos >= Hero.yPos && baddies[i].yPos <= Hero.yPos + 64
             || baddies[i].xPos >= Hero.xPos && baddies[i].xPos <= Hero.xPos + 64 //Check bottom Left edge
-            && baddies[i].yPos + 64 >= Hero.yPos && Hero.yPos + 64 <= Hero.yPos + 64
+            && baddies[i].yPos + 64 >= Hero.yPos && baddies[i].yPos + 64 <= Hero.yPos + 64
             || baddies[i].xPos + 64 >= Hero.xPos && baddies[i].xPos + 64 <= Hero.xPos + 64 //Check bottom Right edge
-            && baddies[i].yPos + 64 >= Hero.yPos && Hero.yPos + 64 <= Hero.yPos + 64 ){
+            && baddies[i].yPos + 64 >= Hero.yPos && baddies[i].yPos + 64 <= Hero.yPos + 64 ){
             baddies[i].visible = false;
             if(32 in keysdown && !(37 in keysdown) && !(38 in keysdown) && !(39 in keysdown) && !(40 in keysdown)){
                 //If stabbing
